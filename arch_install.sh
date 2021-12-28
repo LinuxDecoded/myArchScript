@@ -46,10 +46,9 @@ echo "127.0.1.1       $hostname.localdomain $hostname" >> /etc/hosts
 mkinitcpio -P
 passwd
 pacman --noconfirm -S grub efibootmgr os-prober
-echo "Enter EFI partition: " 
-read efipartition
+echo "Using EFI partition: /dev/sda1" 
 mkdir /boot/efi
-mount $efipartition /boot/efi 
+mount /dev/sda1 /boot/efi 
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 sed -i 's/quiet/pci=noaer/g' /etc/default/grub
 sed -i 's/GRUB_TIMEOUT=5/GRUB_TIMEOUT=0/g' /etc/default/grub
@@ -71,7 +70,7 @@ ln -s dash /bin/sh
 echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 echo "Enter Username: "
 read username
-useradd -m -G wheel -s /bin/zsh $username
+useradd -m -G wheel -s /bin/fish $username
 passwd $username
 echo "Pre-Installation Finish Reboot now"
 ai3_path=/home/$username/arch_install3.sh
@@ -97,10 +96,14 @@ sudo pacman -S --needed git base-devel
 git clone https://aur.archlinux.org/yay.git
 cd yay && makepkg -si
 cd ..
-yay -Sy libxft-bgra-git
+sudo pacman -S libxft
+git clone https://github.com/uditkarode/libxft-bgra
+cd libxft-bgra
+sh autogen.sh --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man
+sudo make install
+cd..
 
 ln -s ~/.config/x11/xinitrc .xinitrc
-sudo pacman -S fish
 sudo chsh cooldude
 mkdir -p ~/dl ~/vids ~/music ~/dox ~/code ~/pix/ss
 alias dots='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
