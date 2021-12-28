@@ -97,11 +97,9 @@ git clone https://aur.archlinux.org/yay.git
 cd yay && makepkg -si
 cd ..
 sudo pacman -S libxft
-git clone https://github.com/uditkarode/libxft-bgra
-cd libxft-bgra
-sh autogen.sh --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man
-sudo make install
-cd..
+git clone https://aur.archlinux.org/libxft-bgra-git.git
+cd libxft-bgra-git && makepkg -si
+cd ..
 
 ln -s ~/.config/x11/xinitrc .xinitrc
 sudo chsh cooldude
